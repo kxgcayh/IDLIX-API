@@ -6,19 +6,19 @@
  * @ Description: IDLIX API for scrapping movie from IDLIX
  */
 
-"use strict";
+'use strict';
 
-const cheerio = require("cheerio");
-const Axios = require("../../config/tools");
-const cache = require("../../config/database");
-const cacheTime = require("../../cacheTime.json");
+const cheerio = require('cheerio');
+const Axios = require('../../config/tools');
+const cache = require('../../config/database');
+const cacheTime = require('../../cacheTime.json');
 
 /** Netflix Series */
 exports.genreSeries = async (req, res) => {
   /* Params url*/
   let genre = req.params.genre;
   let page = req.params.page === null ? 1 : req.params.page;
-  
+
   try {
     /* Get data from cache*/
     const caches = await cache.page.get(`page.series.${genre}.${page}`);
@@ -33,36 +33,36 @@ exports.genreSeries = async (req, res) => {
     const response = await Axios(`/genre/${genre}/page/${page}`);
 
     const $ = cheerio.load(response.data);
-    const element = $(".items.normal");
+    const element = $('.items.normal');
 
     /* find n each data */
     let genreSeries = [];
     let title, link;
 
     $(element)
-      .find(".items.normal > .item.tvshows")
+      .find('.items.normal > .item.tvshows')
       .each((_, e) => {
-        title = $(e).find(".poster > img").attr("alt");
+        title = $(e).find('.poster > img').attr('alt');
         console.log(title);
         console.log(title);
         link = {
           endpoint: $(e)
-            .find(".poster > a")
-            .attr("href")
-            .replace("https://185.231.223.71/", ""),
-          url: $(e).find(".poster > a").attr("href"),
-          thumbnail: $(e).find(".poster > img").attr("data-src"),
+            .find('.poster > a')
+            .attr('href')
+            .replace('https://193.178.172.113/', ''),
+          url: $(e).find('.poster > a').attr('href'),
+          thumbnail: $(e).find('.poster > img').attr('data-src')
         };
 
         genreSeries.push({
           title,
-          link,
+          link
         });
       });
 
     await cache.page.set(`page.series.${genre}.${page}`, {
       data: genreSeries,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
 
     const cacheData = cache.page.get(`page.series.${genre}.${page}`);
@@ -76,7 +76,7 @@ exports.genreSeries = async (req, res) => {
 exports.genreMovie = async (req, res) => {
   /* Params url*/
   let genre = req.params.genre;
-  let page = req.params.page === null  ? 1 : req.params.page;
+  let page = req.params.page === null ? 1 : req.params.page;
 
   try {
     /* Get data from cache*/
@@ -86,42 +86,42 @@ exports.genreMovie = async (req, res) => {
         ? true
         : false;
 
-   // if (hit) return res.send(caches.data);
+    // if (hit) return res.send(caches.data);
 
     /* Get Data */
     const response = await Axios(`/genre/${genre}/page/${page}`);
 
     const $ = cheerio.load(response.data);
-    const element = $(".items.normal");
+    const element = $('.items.normal');
 
     /* find n each data */
     let genreMovie = [];
     let title, link;
 
     $(element)
-      .find(".items.normal > .item.movies")
+      .find('.items.normal > .item.movies')
       .each((_, e) => {
-        title = $(e).find(".poster > img").attr("alt");
+        title = $(e).find('.poster > img').attr('alt');
         console.log(title);
         console.log(title);
         link = {
           endpoint: $(e)
-            .find(".poster > a")
-            .attr("href")
-            .replace("https://185.231.223.71/", ""),
-          url: $(e).find(".poster > a").attr("href"),
-          thumbnail: $(e).find(".poster > img").attr("data-src"),
+            .find('.poster > a')
+            .attr('href')
+            .replace('https://193.178.172.113/', ''),
+          url: $(e).find('.poster > a').attr('href'),
+          thumbnail: $(e).find('.poster > img').attr('data-src')
         };
 
         genreMovie.push({
           title,
-          link,
+          link
         });
       });
 
     await cache.page.set(`page.movie.${genre}.${page}`, {
       data: genreMovie,
-      timestamp: Date.now(),
+      timestamp: Date.now()
     });
 
     const cacheData = cache.page.get(`page.movie.${genre}.${page}`);

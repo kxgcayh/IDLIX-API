@@ -7,9 +7,9 @@
  */
 
 /* Module */
-const axios = require("axios").default;
-const tough = require("tough-cookie");
-const baseURL = "https://185.231.223.71/";
+const axios = require('axios').default;
+const tough = require('tough-cookie');
+const baseURL = 'https://193.178.172.113/';
 const cookieJar = new tough.CookieJar();
 
 /* === */
@@ -17,7 +17,7 @@ axios.defaults.baseURL = baseURL;
 axios.defaults.jar = cookieJar;
 
 /* Function */
-const Axios = async (url) => {
+const Axios = async url => {
   return new Promise(async (fullfill, reject) => {
     try {
       const res = await axios.get(url);
